@@ -1,25 +1,46 @@
-import java.sql.SQLOutput;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 
-public class library {
+public class Library {
 
-    static Random random = new Random();
+
     static Scanner scanner = new Scanner(System.in);
-    static String[] sequence = new String[4];
     static String[] colors = {"yel", "blu", "bro", "bla", "gre", "whi", "red", "ora"};
     static String[][] arrhelp = new String[10][4];
 
-    public static void drawComb() {
 
+    public static void playMastermind() {
+        String[][] arrOfSeq = new String[10][4];
+        boolean end = false;
+        for (int i = 0; i < 10; i++) {
+           String[] sequence =  Library.drawComb();
+            // ta sama nazwa zmiennej w innej klasie - zasięgi nazw pomiędzy klasami
+            arrOfSeq[i] = Library.setComb();
+            end = Library.checkComb(arrOfSeq[i], i, sequence);
+            Library.dispBoard(arrOfSeq, i);
+
+            if (end) {
+                System.out.println("Odgadłeś kombinację kolorów! Wygrałeś!");
+                break;
+            }
+        }
+        if (!end) {
+            System.out.println("Skończyły Ci się próby! Przegrałeś!");
+        }
+    }
+
+    public static  String[] drawComb() {
         // ilość do ustawienia później
         // clasy z dużej litery zawsze, moduły z małekj
-        sequence = DrawWithoutRepeat.start(colors, 4);
+        String[] sequence = DrawWithoutRepeat.start(colors, 4);
         System.out.println();
         System.out.println("Wylosowana sekwencja to: ");
         for (int i = 0; i < 4; i++) {
             System.out.print(sequence[i] + " , ");
         }
+        return sequence;
     }
 
     public static String[] setComb() {
@@ -64,7 +85,7 @@ public class library {
         return yourComb;
     }
 
-    public static boolean checkComb(String[] yourComb, int round) {
+    public static boolean checkComb(String[] yourComb, int round, String[] sequence) {
 
         String[] helper = new String[4];
         for (int i = 0; i < 4; i++) {
@@ -101,6 +122,8 @@ public class library {
             System.out.println("Zgadłeś sekwencję, wygrałeś !!!");
             win = true;
         }
+
+        //Arrays.equals()
         return win;
     }
 
@@ -123,3 +146,11 @@ public class library {
 
     }
 }
+
+
+
+// y, y, b, r |
+// x, x, y, y | 2* is
+// x, x, y, x | 1* is
+// x, y, y, x | 1* is 1* hit
+// x, y, y, y | 2* is 1* hit
